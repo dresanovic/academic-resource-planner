@@ -1,0 +1,31 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+
+# Node
+node_modules/
+.next/
+coverage/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+# Build and temporary files
+dist/
+build/
+tmp/
+temp/
