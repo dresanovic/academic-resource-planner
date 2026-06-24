@@ -29,3 +29,19 @@ dist/
 build/
 tmp/
 temp/
+
+# Agent runtime/private artifacts
+.agents/**/.env
+.agents/**/.env.*
+.agents/**/credentials*
+.agents/**/tokens*
+.agents/**/secrets*
+.agents/**/.cache/
+.agents/**/tmp/
+.agents/**/temp/
+.agents/**/logs/
+
+# Keep committed agent skills
+!.agents/
+!.agents/skills/
+!.agents/skills/**
