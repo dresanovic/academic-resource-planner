@@ -1,0 +1,165 @@
+openapi: 3.1.0
+info:
+  title: Meeting Room Booking API
+  version: 0.1.0
+  description: Contract for creating meeting room bookings and returning accepted or rejected booking outcomes.
+paths:
+  /bookings:
+    post:
+      summary: Create a meeting room booking
+      operationId: createBooking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookingRequest'
+            examples:
+              availableRoom:
+                value:
+                  room_id: room-a
+                  user_id: user-123
+                  start_time: '2026-07-02T09:00:00+02:00'
+                  end_time: '2026-07-02T10:00:00+02:00'
+      responses:
+        '201':
+          description: Booking accepted and created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingAccepted'
+        '409':
+          description: Booking rejected because the requested room overlaps an existing booking.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingRejected'
+        '422':
+          description: Booking rejected because the request violates validation rules.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookingRejected'
+  /rooms:
+    get:
+      summary: List rooms available for booking selection
+      operationId: listRooms
+      responses:
+        '200':
+          description: Rooms that can be selected in booking requests.
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - rooms
+                properties:
+                  rooms:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Room'
+components:
+  schemas:
+    CreateBookingRequest:
+      type: object
+      required:
+        - room_id
+        - user_id
+        - start_time
+        - end_time
+      properties:
+        room_id:
+          type: string
+          minLength: 1
+        user_id:
+          type: string
+          minLength: 1
+        start_time:
+          type: string
+          format: date-time
+          description: Inclusive future start time aligned to a 15-minute increment.
+        end_time:
+          type: string
+          format: date-time
+          description: Exclusive end time later than start_time and aligned to a 15-minute increment.
+    BookingAccepted:
+      type: object
+      required:
+        - status
+        - booking
+      properties:
+        status:
+          type: string
+          enum:
+            - accepted
+        booking:
+          $ref: '#/components/schemas/Booking'
+    BookingRejected:
+      type: object
+      required:
+        - status
+        - reason
+        - requested_room_id
+        - requested_start_time
+        - requested_end_time
+      properties:
+        status:
+          type: string
+          enum:
+            - rejected
+        reason:
+          type: string
+          enum:
+            - end_not_after_start
+            - start_time_in_past
+            - not_15_minute_increment
+            - unknown_room
+            - room_unavailable
+            - same_room_overlap
+        requested_room_id:
+          type: string
+        requested_start_time:
+          type: string
+          format: date-time
+        requested_end_time:
+          type: string
+          format: date-time
+    Booking:
+      type: object
+      required:
+        - id
+        - room_id
+        - user_id
+        - start_time
+        - end_time
+        - status
+      properties:
+        id:
+          type: string
+        room_id:
+          type: string
+        user_id:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+            - accepted
+    Room:
+      type: object
+      required:
+        - id
+        - name
+        - is_available_for_booking
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        is_available_for_booking:
+          type: boolean
