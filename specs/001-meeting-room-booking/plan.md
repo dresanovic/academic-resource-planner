@@ -6,7 +6,7 @@
 
 ## Summary
 
-Build a single backend booking service that lets known users create meeting room bookings for future 15-minute time ranges, rejects invalid or overlapping same-room requests, and allows concurrent bookings for different rooms. The implementation centers on explicit room and booking domain models, a transactional booking creation workflow, and contract-level tests that prove same-room overlap prevention and different-room concurrency behavior.
+Build a single backend booking service that lets known users create meeting room bookings for future 15-minute time ranges, rejects past-start, invalid-order, or overlapping same-room requests, and allows concurrent bookings for different rooms. The implementation centers on explicit room and booking domain models, a transactional booking creation workflow, and contract-level tests that prove time validation, same-room overlap prevention, and different-room concurrency behavior.
 
 ## Technical Context
 
@@ -24,7 +24,7 @@ Build a single backend booking service that lets known users create meeting room
 
 **Performance Goals**: Users receive booking acceptance or rejection in under 1 second for the planned scope of 50 rooms and 500 future bookings
 
-**Constraints**: Prevent overlapping bookings for the same room under concurrent requests; allow adjacent same-room bookings; accept bookings at any future time without operating-hours restrictions; require start and end times on 15-minute boundaries
+**Constraints**: Prevent overlapping bookings for the same room under concurrent requests; allow adjacent same-room bookings; accept bookings at any future time without operating-hours restrictions; require the booking start time to be strictly in the future at submission time; reject end times before or equal to the start time; require start and end times on 15-minute boundaries; return clear validation messages for invalid time requests
 
 **Scale/Scope**: Initial feature supports at least 50 rooms, 500 future bookings, and known users creating bookings; editing, cancellation, recurring bookings, approvals, room capacity, equipment filtering, and notifications remain out of scope
 

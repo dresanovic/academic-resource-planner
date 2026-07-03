@@ -54,18 +54,20 @@
 ### Tests for User Story 1
 
 - [ ] T014 [P] [US1] Add contract test for successful `POST /bookings` response shape in `tests/contract/test_booking_api.py`
-- [ ] T015 [P] [US1] Add unit tests for future-time, end-after-start, and 15-minute increment validation in `tests/unit/test_booking_rules.py`
-- [ ] T016 [P] [US1] Add integration test for creating a valid booking in an empty room schedule in `tests/integration/test_booking_conflicts.py`
-- [ ] T017 [P] [US1] Add integration tests for `unknown_room` and `room_unavailable` booking rejections in `tests/integration/test_booking_conflicts.py`
+- [ ] T015 [P] [US1] Add unit tests for strict future-at-submission validation, end-after-start validation, and 15-minute increment validation in `tests/unit/test_booking_rules.py`
+- [ ] T016 [P] [US1] Add contract test for invalid time validation rejection response shape and clear validation messages in `tests/contract/test_booking_api.py`
+- [ ] T017 [P] [US1] Add integration tests proving past-start, current-time start, and end-before-or-equal-start requests are rejected without creating bookings in `tests/integration/test_booking_conflicts.py`
+- [ ] T018 [P] [US1] Add integration test for creating a valid booking in an empty room schedule in `tests/integration/test_booking_conflicts.py`
+- [ ] T019 [P] [US1] Add integration tests for `unknown_room` and `room_unavailable` booking rejections in `tests/integration/test_booking_conflicts.py`
 
 ### Implementation for User Story 1
 
-- [ ] T018 [US1] Implement booking validation rules for end-after-start, future start time, and 15-minute increments in `src/resource_planner/services/booking_service.py`
-- [ ] T019 [US1] Implement room existence and availability rejection handling in `src/resource_planner/services/booking_service.py`
-- [ ] T020 [US1] Implement repository operations to fetch rooms, fetch users, and create accepted bookings in `src/resource_planner/storage/repository.py`
-- [ ] T021 [US1] Implement booking creation service path for valid non-conflicting requests in `src/resource_planner/services/booking_service.py`
-- [ ] T022 [US1] Implement `POST /bookings` accepted response handling in `src/resource_planner/api/bookings.py`
-- [ ] T023 [US1] Implement `GET /rooms` room listing endpoint from the contract in `src/resource_planner/api/bookings.py`
+- [ ] T020 [US1] Implement booking validation rules for end-after-start, strict future-at-submission start time, and 15-minute increments in `src/resource_planner/services/booking_service.py`
+- [ ] T021 [US1] Implement room existence and availability rejection handling in `src/resource_planner/services/booking_service.py`
+- [ ] T022 [US1] Implement repository operations to fetch rooms, fetch users, and create accepted bookings in `src/resource_planner/storage/repository.py`
+- [ ] T023 [US1] Implement booking creation service path for valid non-conflicting requests in `src/resource_planner/services/booking_service.py`
+- [ ] T024 [US1] Implement `POST /bookings` accepted response handling in `src/resource_planner/api/bookings.py`
+- [ ] T025 [US1] Implement `GET /rooms` room listing endpoint from the contract in `src/resource_planner/api/bookings.py`
 
 **Checkpoint**: User Story 1 is fully functional and testable independently.
 
@@ -79,17 +81,17 @@
 
 ### Tests for User Story 2
 
-- [ ] T024 [P] [US2] Add contract test for `409` overlap rejection response shape in `tests/contract/test_booking_api.py`
-- [ ] T025 [P] [US2] Add unit tests for half-open overlap detection cases in `tests/unit/test_booking_rules.py`
-- [ ] T026 [P] [US2] Add integration tests for same-room partial, enclosing, exact-match, and adjacent booking cases in `tests/integration/test_booking_conflicts.py`
-- [ ] T027 [P] [US2] Add integration test proving only one overlapping concurrent request for the same room succeeds in `tests/integration/test_booking_conflicts.py`
+- [ ] T026 [P] [US2] Add contract test for `409` overlap rejection response shape in `tests/contract/test_booking_api.py`
+- [ ] T027 [P] [US2] Add unit tests for half-open overlap detection cases in `tests/unit/test_booking_rules.py`
+- [ ] T028 [P] [US2] Add integration tests for same-room partial, enclosing, exact-match, and adjacent booking cases in `tests/integration/test_booking_conflicts.py`
+- [ ] T029 [P] [US2] Add integration test proving only one overlapping concurrent request for the same room succeeds in `tests/integration/test_booking_conflicts.py`
 
 ### Implementation for User Story 2
 
-- [ ] T028 [US2] Implement half-open time range overlap detection in `src/resource_planner/services/booking_service.py`
-- [ ] T029 [US2] Implement repository query for existing same-room overlapping bookings in `src/resource_planner/storage/repository.py`
-- [ ] T030 [US2] Integrate transactional conflict check before booking creation in `src/resource_planner/services/booking_service.py`
-- [ ] T031 [US2] Return `same_room_overlap` rejection responses with requested room and time range from `src/resource_planner/api/bookings.py`
+- [ ] T030 [US2] Implement half-open time range overlap detection in `src/resource_planner/services/booking_service.py`
+- [ ] T031 [US2] Implement repository query for existing same-room overlapping bookings in `src/resource_planner/storage/repository.py`
+- [ ] T032 [US2] Integrate transactional conflict check before booking creation in `src/resource_planner/services/booking_service.py`
+- [ ] T033 [US2] Return `same_room_overlap` rejection responses with requested room and time range from `src/resource_planner/api/bookings.py`
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -103,14 +105,14 @@
 
 ### Tests for User Story 3
 
-- [ ] T032 [P] [US3] Add integration test for concurrent same-time bookings in different rooms in `tests/integration/test_booking_conflicts.py`
-- [ ] T033 [P] [US3] Add unit test proving overlap checks are scoped by `room_id` in `tests/unit/test_booking_rules.py`
+- [ ] T034 [P] [US3] Add integration test for concurrent same-time bookings in different rooms in `tests/integration/test_booking_conflicts.py`
+- [ ] T035 [P] [US3] Add unit test proving overlap checks are scoped by `room_id` in `tests/unit/test_booking_rules.py`
 
 ### Implementation for User Story 3
 
-- [ ] T034 [US3] Ensure conflict queries filter by requested `room_id` only in `src/resource_planner/storage/repository.py`
-- [ ] T035 [US3] Ensure booking service allows same-time bookings for different rooms in `src/resource_planner/services/booking_service.py`
-- [ ] T036 [US3] Verify accepted response for different-room concurrent booking remains contract-compliant in `src/resource_planner/api/bookings.py`
+- [ ] T036 [US3] Ensure conflict queries filter by requested `room_id` only in `src/resource_planner/storage/repository.py`
+- [ ] T037 [US3] Ensure booking service allows same-time bookings for different rooms in `src/resource_planner/services/booking_service.py`
+- [ ] T038 [US3] Verify accepted response for different-room concurrent booking remains contract-compliant in `src/resource_planner/api/bookings.py`
 
 **Checkpoint**: All user stories are independently functional.
 
@@ -120,12 +122,12 @@
 
 **Purpose**: Final validation, documentation, and cleanup across all user stories.
 
-- [ ] T037 [P] Update `README.md` with local setup, run, and test commands for the booking service
-- [ ] T038 [P] Align `specs/001-meeting-room-booking/quickstart.md` with final commands and expected responses
-- [ ] T039 Add integration validation for 50 rooms and 500 future bookings with under-1-second booking response expectation in `tests/integration/test_booking_conflicts.py`
-- [ ] T040 Run the full pytest suite and record any required fixes in `tests/`
-- [ ] T041 Validate `contracts/booking-api.yaml` against implemented request and response behavior in `tests/contract/test_booking_api.py`
-- [ ] T042 Review implementation against out-of-scope items in `specs/001-meeting-room-booking/spec.md` to ensure editing, cancellation, recurring bookings, approvals, capacity, equipment filtering, and notifications were not added
+- [ ] T039 [P] Update `README.md` with local setup, run, and test commands for the booking service
+- [ ] T040 [P] Align `specs/001-meeting-room-booking/quickstart.md` with final commands and expected responses
+- [ ] T041 Add integration validation for 50 rooms and 500 future bookings with under-1-second booking response expectation in `tests/integration/test_booking_conflicts.py`
+- [ ] T042 Run the full pytest suite and record any required fixes in `tests/`
+- [ ] T043 Validate `contracts/booking-api.yaml` against implemented request and response behavior in `tests/contract/test_booking_api.py`
+- [ ] T044 Review implementation against out-of-scope items in `specs/001-meeting-room-booking/spec.md` to ensure editing, cancellation, recurring bookings, approvals, capacity, equipment filtering, and notifications were not added
 
 ---
 
@@ -159,7 +161,7 @@
 - T007, T008, T009, and T013 can run in parallel after T006.
 - Tests within each user story marked `[P]` can be written in parallel.
 - US2 and US3 can proceed in parallel after US1 establishes the booking creation path.
-- T037 and T038 can run in parallel during polish.
+- T039 and T040 can run in parallel during polish.
 
 ---
 
@@ -167,25 +169,27 @@
 
 ```bash
 Task: "T014 [P] [US1] Add contract test for successful POST /bookings response shape in tests/contract/test_booking_api.py"
-Task: "T015 [P] [US1] Add unit tests for future-time, end-after-start, and 15-minute increment validation in tests/unit/test_booking_rules.py"
-Task: "T016 [P] [US1] Add integration test for creating a valid booking in an empty room schedule in tests/integration/test_booking_conflicts.py"
-Task: "T017 [P] [US1] Add integration tests for unknown_room and room_unavailable booking rejections in tests/integration/test_booking_conflicts.py"
+Task: "T015 [P] [US1] Add unit tests for strict future-at-submission validation, end-after-start validation, and 15-minute increment validation in tests/unit/test_booking_rules.py"
+Task: "T016 [P] [US1] Add contract test for invalid time validation rejection response shape and clear validation messages in tests/contract/test_booking_api.py"
+Task: "T017 [P] [US1] Add integration tests proving past-start, current-time start, and end-before-or-equal-start requests are rejected without creating bookings in tests/integration/test_booking_conflicts.py"
+Task: "T018 [P] [US1] Add integration test for creating a valid booking in an empty room schedule in tests/integration/test_booking_conflicts.py"
+Task: "T019 [P] [US1] Add integration tests for unknown_room and room_unavailable booking rejections in tests/integration/test_booking_conflicts.py"
 ```
 
 ## Parallel Example: User Story 2
 
 ```bash
-Task: "T024 [P] [US2] Add contract test for 409 overlap rejection response shape in tests/contract/test_booking_api.py"
-Task: "T025 [P] [US2] Add unit tests for half-open overlap detection cases in tests/unit/test_booking_rules.py"
-Task: "T026 [P] [US2] Add integration tests for same-room partial, enclosing, exact-match, and adjacent booking cases in tests/integration/test_booking_conflicts.py"
-Task: "T027 [P] [US2] Add integration test proving only one overlapping concurrent request for the same room succeeds in tests/integration/test_booking_conflicts.py"
+Task: "T026 [P] [US2] Add contract test for 409 overlap rejection response shape in tests/contract/test_booking_api.py"
+Task: "T027 [P] [US2] Add unit tests for half-open overlap detection cases in tests/unit/test_booking_rules.py"
+Task: "T028 [P] [US2] Add integration tests for same-room partial, enclosing, exact-match, and adjacent booking cases in tests/integration/test_booking_conflicts.py"
+Task: "T029 [P] [US2] Add integration test proving only one overlapping concurrent request for the same room succeeds in tests/integration/test_booking_conflicts.py"
 ```
 
 ## Parallel Example: User Story 3
 
 ```bash
-Task: "T032 [P] [US3] Add integration test for concurrent same-time bookings in different rooms in tests/integration/test_booking_conflicts.py"
-Task: "T033 [P] [US3] Add unit test proving overlap checks are scoped by room_id in tests/unit/test_booking_rules.py"
+Task: "T034 [P] [US3] Add integration test for concurrent same-time bookings in different rooms in tests/integration/test_booking_conflicts.py"
+Task: "T035 [P] [US3] Add unit test proving overlap checks are scoped by room_id in tests/unit/test_booking_rules.py"
 ```
 
 ---
