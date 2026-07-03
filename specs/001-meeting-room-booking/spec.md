@@ -30,6 +30,9 @@ A user chooses a meeting room, start time, and end time, then creates a booking 
 
 1. **Given** a room has no existing bookings, **When** a user requests that room from 09:00 to 10:00, **Then** the booking is created for that room and time range
 2. **Given** a room has an existing booking from 09:00 to 10:00, **When** a user requests the same room from 10:00 to 11:00, **Then** the booking is created because the time ranges touch but do not overlap
+3. **Given** the current time is 08:45, **When** a user requests an available room from 09:00 to 10:00, **Then** the booking is created because the start time is in the future at submission time
+4. **Given** the current time is 09:05, **When** a user requests an available room from 09:00 to 10:00, **Then** the booking is rejected because the start time is in the past at submission time and the user sees a clear validation message
+5. **Given** a user enters an end time that is equal to or before the start time, **When** the booking is submitted, **Then** the booking is rejected and the user sees a clear validation message explaining that the end time must be later than the start time
 
 ---
 
@@ -63,8 +66,10 @@ A user can book one room at the same time another room is already booked, as lon
 
 ### Edge Cases
 
-- A booking request with an end time equal to or earlier than the start time is rejected.
-- A booking request with a start time in the past is rejected.
+- A booking request with an end time equal to or earlier than the start time is rejected before any booking is created.
+- A booking request with a start time in the past at the moment the booking is submitted is rejected before any booking is created.
+- A booking request with a start time equal to the current time at the moment the booking is submitted is rejected because the start time must be in the future.
+- A booking request whose start time was in the future when entered but is no longer in the future when submitted is rejected.
 - A booking request whose start or end time does not align to a 15-minute increment is rejected.
 - A booking request outside typical business hours is evaluated by the same future-time, increment, room availability, and overlap rules as any other request.
 - A booking request for an unknown or unavailable room is rejected.
@@ -78,7 +83,7 @@ A user can book one room at the same time another room is already booked, as lon
 
 - **FR-001**: Users MUST be able to select a meeting room and enter a start time and end time for a booking request.
 - **FR-002**: System MUST validate that every booking request has an end time later than its start time.
-- **FR-003**: System MUST reject booking requests with a start time in the past.
+- **FR-003**: System MUST validate that every booking request has a start time in the future at the moment the booking is submitted.
 - **FR-004**: System MUST validate that booking start and end times align to 15-minute increments.
 - **FR-005**: System MUST allow bookings for any future time range that satisfies room existence, room availability, 15-minute increment, and non-overlap rules.
 - **FR-006**: System MUST create a booking when the selected room has no existing booking that overlaps the requested time range.
@@ -88,6 +93,17 @@ A user can book one room at the same time another room is already booked, as lon
 - **FR-010**: System MUST show users whether a booking request was accepted or rejected.
 - **FR-011**: System MUST identify the room and requested time range in any rejection caused by a same-room overlap.
 - **FR-012**: System MUST keep each booking associated with exactly one room, one start time, and one end time.
+- **FR-013**: System MUST reject booking requests whose end time is before or equal to the start time.
+- **FR-014**: System MUST reject booking requests whose start time is not in the future at the moment the booking is submitted.
+- **FR-015**: System MUST show a clear validation message when a booking request is rejected because the start time is not in the future or because the end time is before or equal to the start time.
+
+### Validation Rules
+
+- **VR-001**: The booking start time MUST be strictly later than the current time at the moment the booking is submitted.
+- **VR-002**: A booking request with a start time in the past, or exactly equal to the current time at submission, MUST be rejected.
+- **VR-003**: The booking end time MUST be strictly later than the booking start time.
+- **VR-004**: A booking request with an end time before or equal to the start time MUST be rejected.
+- **VR-005**: Rejections caused by invalid start or end times MUST present a clear validation message that tells the user which time rule was violated.
 
 ### Key Entities
 
